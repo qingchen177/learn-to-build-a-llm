@@ -1,3 +1,5 @@
+from datetime import time
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -22,7 +24,7 @@ n_layer = 6
 dropout = 0.2
 
 torch.manual_seed(1337)
-with open('dataset/input.txt', 'r', encoding='utf-8') as f:
+with open('pretrain/dataset/input.txt', 'r', encoding='utf-8') as f:
     text = f.read()
 
 # 统计字符数，作为我们的词本
@@ -225,35 +227,12 @@ m = model.to(device)
 # 打印模型的参数数量
 print(sum(p.numel() for p in m.parameters()), "参数")
 
-# 优化
-optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
-for iter in range(max_iters):
-
-    # every once in a while evaluate the loss on train and val sets \每隔一段时间评估 train 和 val 集的损失
-    if iter % eval_interval == 0:
-        losses = estimate_loss()
-        print(f"step {iter}:train loss: {losses['train']:.4f} , val loss: {losses['val']:.4f}")
-
-    # sample to a batch of data \样本转换为一批数据
-    xb, yb = get_batch('train')
-
-    # evaluate the loss \评估损失
-    logits, loss = model(xb, yb)
-    optimizer.zero_grad(set_to_none=True)
-    loss.backward()
-    optimizer.step()
-
-# 总训练耗时
-end_time = time.time()  # 记录结束时间
-print(f"函数运行时间：{(end_time - start_time) / 60} 分钟")
+# 加载模型
+model = torch.load('D:/work/models/nano/nano-pretrain.model')
 
 # generate from the model \从模型生成
 context = torch.zeros((1, 1), dtype=torch.long, device=device)
 print(decode(m.generate(context, max_new_token=500)[0].tolist()))
 
-# 保存模型
-torch.save(model, 'D:/work/models/nano/nano-pretrain.model')
 
-# 加载模型
-# model = torch.load('D:/work/models/nano/nano-pretrain.model')

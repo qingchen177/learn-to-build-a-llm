@@ -35,7 +35,7 @@ train_data = data[:n]
 val_data = data[n:]
 
 
-# 数据加载
+# 数据随机加载
 def get_batch(split):
     data = train_data if split == 'train' else val_data
     ix = torch.randint(len(data) - block_size, (batch_size,))
