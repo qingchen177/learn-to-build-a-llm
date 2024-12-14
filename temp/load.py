@@ -24,7 +24,7 @@ n_layer = 6
 dropout = 0.2
 
 torch.manual_seed(1337)
-with open('pretrain/dataset/input.txt', 'r', encoding='utf-8') as f:
+with open('../AndrejKarpathy/SimpleGPT/dataset/input.txt', 'r', encoding='utf-8') as f:
     text = f.read()
 
 # 统计字符数，作为我们的词本
@@ -229,7 +229,7 @@ print(sum(p.numel() for p in m.parameters()), "参数")
 
 
 # 加载模型
-model = torch.load('D:/work/models/nano/nano-pretrain.model')
+model = torch.load('D:/work/models/nano/nano-SimpleGPT.model')
 
 # generate from the model \从模型生成
 context = torch.zeros((1, 1), dtype=torch.long, device=device)

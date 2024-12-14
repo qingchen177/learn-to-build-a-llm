@@ -253,7 +253,4 @@ context = torch.zeros((1, 1), dtype=torch.long, device=device)
 print(decode(m.generate(context, max_new_token=500)[0].tolist()))
 
 # 保存模型
-torch.save(model, 'D:/work/models/nano/nano-pretrain.model')
-
-# 加载模型
-# model = torch.load('D:/work/models/nano/nano-pretrain.model')
+torch.save(model, 'D:/work/models/nano/nano-SimpleGPT.model')
