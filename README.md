@@ -1,11 +1,16 @@
+<div align="center">
+
 # learn-to-build-a-llm
 
 自己学习从零开始构建一个大语言模型的相关记录，比较杂
 
-| 目录           | 介绍                                                         |
-| -------------- | ------------------------------------------------------------ |
-| AndrejKarpathy | 跟着大佬学，此目录下每个子文件夹存放对应其某个视频的学习记录 |
-| minimind       | 学习大佬的开源项目：https://github.com/jingyaogong/minimind，此目录存放应该项目的学习和问题记录 |
+</div>
+
+# 简介
+
+- <a href="#Andrej Karpathy">Andrej Karpathy</a>：跟着大佬学，此目录下每个子文件夹存放对应其某个视频的学习记录
+- <a href="#minimind">minimind</a>：学习大佬的开源项目：https://github.com/jingyaogong/minimind
+此目录存放应该项目的学习和问题记录
 
 ## Andrej Karpathy
 

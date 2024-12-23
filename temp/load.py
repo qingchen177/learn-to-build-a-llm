@@ -24,7 +24,7 @@ n_layer = 6
 dropout = 0.2
 
 torch.manual_seed(1337)
-with open('../AndrejKarpathy/SimpleGPT/dataset/input.txt', 'r', encoding='utf-8') as f:
+with open('../Andrej Karpathy/SimpleGPT/dataset/input.txt', 'r', encoding='utf-8') as f:
     text = f.read()
 
 # 统计字符数，作为我们的词本
