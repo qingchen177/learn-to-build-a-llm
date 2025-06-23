@@ -14,6 +14,5 @@ conda install pytorch torchvision torchaudio pytorch-cuda=12.4 -c pytorch -c nvi
 
 ## 数据
 参考[minimind](https://github.com/jingyaogong/minimind)的`README.md`去下载就好了
-我全部放在`/home/li/datasets/`里面
 
-> 20241213：等全部流程做完会把数据集打包上传到百度云或者夸克
+数据集：https://www.modelscope.cn/datasets/gongjy/minimind_dataset/files

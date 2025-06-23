@@ -1,14 +1,9 @@
 import random
-from tqdm import tqdm
-from transformers import AutoTokenizer
 import json
-from datasets import load_dataset
 from tokenizers import (
     decoders,
     models,
-    normalizers,
     pre_tokenizers,
-    processors,
     trainers,
     Tokenizer,
 )
@@ -26,14 +21,14 @@ def train_tokenizer():
                 data = json.loads(line)
                 yield data['text']
 
-    data_path = '/home/li/datasets/tokenizer_train.jsonl'
+    data_path = '/home/li/datasets/minimind/pretrain_hq.jsonl'
 
     # 初始化tokenizer
     tokenizer = Tokenizer(models.BPE())
     tokenizer.pre_tokenizer = pre_tokenizers.ByteLevel(add_prefix_space=False)
 
     # 定义特殊token
-    special_tokens = ["<unk>", "<s>", "</s>"]
+    special_tokens = ["<|endoftext|>", "<|im_start|>", "<|im_end|>"]
 
     # 设置训练器并添加特殊token
     trainer = trainers.BpeTrainer(
@@ -53,9 +48,9 @@ def train_tokenizer():
     tokenizer.decoder = decoders.ByteLevel()
 
     # 检查特殊token的索引
-    assert tokenizer.token_to_id("<unk>") == 0
-    assert tokenizer.token_to_id("<s>") == 1
-    assert tokenizer.token_to_id("</s>") == 2
+    assert tokenizer.token_to_id("<|endoftext|>") == 0
+    assert tokenizer.token_to_id("<|im_start|>") == 1
+    assert tokenizer.token_to_id("<|im_end|>") == 2
 
     # 保存tokenizer
     tokenizer_dir = home_dir + "/model/minimind_tokenizer"
@@ -67,10 +62,10 @@ def train_tokenizer():
     config = {
         "add_bos_token": False,
         "add_eos_token": False,
-        "add_prefix_space": True,
+        "add_prefix_space": False,
         "added_tokens_decoder": {
             "0": {
-                "content": "<unk>",
+                "content": "<|endoftext|>",
                 "lstrip": False,
                 "normalized": False,
                 "rstrip": False,
@@ -78,7 +73,7 @@ def train_tokenizer():
                 "special": True
             },
             "1": {
-                "content": "<s>",
+                "content": "<|im_start|>",
                 "lstrip": False,
                 "normalized": False,
                 "rstrip": False,
@@ -86,7 +81,7 @@ def train_tokenizer():
                 "special": True
             },
             "2": {
-                "content": "</s>",
+                "content": "<|im_end|>",
                 "lstrip": False,
                 "normalized": False,
                 "rstrip": False,
@@ -95,18 +90,17 @@ def train_tokenizer():
             }
         },
         "additional_special_tokens": [],
-        "bos_token": "<s>",
+        "bos_token": "<|im_start|>",
         "clean_up_tokenization_spaces": False,
-        "eos_token": "</s>",
+        "eos_token": "<|im_end|>",
         "legacy": True,
-        "model_max_length": 1000000000000000019884624838656,
-        "pad_token": None,
+        "model_max_length": 32768,
+        "pad_token": "<|endoftext|>",
         "sp_model_kwargs": {},
         "spaces_between_special_tokens": False,
         "tokenizer_class": "PreTrainedTokenizerFast",
-        "unk_token": "<unk>",
-        "use_default_system_prompt": False,
-        "chat_template": "{% if messages[0]['role'] == 'system' %}{% set system_message = messages[0]['content'] %}{% endif %}{% if system_message is defined %}{{ system_message }}{% endif %}{% for message in messages %}{% set content = message['content'] %}{% if message['role'] == 'user' %}{{ '<s>user\\n' + content + '</s>\\n<s>assistant\\n' }}{% elif message['role'] == 'assistant' %}{{ content + '</s>' + '\\n' }}{% endif %}{% endfor %}"
+        "unk_token": "<|endoftext|>",
+        "chat_template": "{% if messages[0]['role'] == 'system' %}{% set system_message = messages[0]['content'] %}{{ '<|im_start|>system\\n' + system_message + '<|im_end|>\\n' }}{% else %}{{ '<|im_start|>system\\nYou are a helpful assistant<|im_end|>\\n' }}{% endif %}{% for message in messages %}{% set content = message['content'] %}{% if message['role'] == 'user' %}{{ '<|im_start|>user\\n' + content + '<|im_end|>\\n<|im_start|>assistant\\n' }}{% elif message['role'] == 'assistant' %}{{ content + '<|im_end|>' + '\\n' }}{% endif %}{% endfor %}"
     }
 
     # 保存配置文件
@@ -120,7 +114,7 @@ def eval_tokenizer():
     from transformers import AutoTokenizer
 
     # 加载预训练的tokenizer
-    tokenizer = AutoTokenizer.from_pretrained(home_dir + "/model/minimind_tokenizer")
+    tokenizer = AutoTokenizer.from_pretrained("../model/")
 
     messages = [
         {"role": "system", "content": "你是一个优秀的聊天机器人，总是给我正确的回应！"},
@@ -141,12 +135,12 @@ def eval_tokenizer():
     print('encoder长度：', len(model_inputs['input_ids']))
 
     input_ids = model_inputs['input_ids']
-    response = tokenizer.decode(input_ids)
+    response = tokenizer.decode(input_ids, skip_special_tokens=False)
     print('decoder和原始文本是否一致：', response == new_prompt)
 
 
 def main():
-    # train_tokenizer()
+    train_tokenizer()
     eval_tokenizer()
 
 
