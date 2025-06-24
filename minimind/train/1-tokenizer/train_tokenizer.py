@@ -10,7 +10,8 @@ from tokenizers import (
 import os
 
 random.seed(42)
-home_dir = '/home/li/work/projects/myPorjects/learn-to-build-a-llm/minimind'
+# home_dir = '/home/li/work/projects/myPorjects/learn-to-build-a-llm/minimind'
+home_dir = r'D:\learn-to-build-a-llm\minimind'
 
 
 def train_tokenizer():
@@ -21,7 +22,8 @@ def train_tokenizer():
                 data = json.loads(line)
                 yield data['text']
 
-    data_path = '/home/li/datasets/minimind/pretrain_hq.jsonl'
+    # data_path = '/home/li/datasets/minimind/pretrain_hq.jsonl'
+    data_path = r'D:\datasets\minimind\pretrain_hq.jsonl'
 
     # 初始化tokenizer
     tokenizer = Tokenizer(models.BPE())
@@ -114,7 +116,7 @@ def eval_tokenizer():
     from transformers import AutoTokenizer
 
     # 加载预训练的tokenizer
-    tokenizer = AutoTokenizer.from_pretrained("../model/")
+    tokenizer = AutoTokenizer.from_pretrained(home_dir + "/model/minimind_tokenizer")
 
     messages = [
         {"role": "system", "content": "你是一个优秀的聊天机器人，总是给我正确的回应！"},
@@ -140,7 +142,7 @@ def eval_tokenizer():
 
 
 def main():
-    train_tokenizer()
+    # train_tokenizer()
     eval_tokenizer()
 
 
