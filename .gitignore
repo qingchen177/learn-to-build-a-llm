@@ -10,5 +10,5 @@ input.txt
 env/
 venv/
 /temp
-learn_pytorch/tutorials/data
+basic/learn_pytorch/tutorials/data
 *.pth
